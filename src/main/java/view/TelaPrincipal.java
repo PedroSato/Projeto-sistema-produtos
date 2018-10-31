@@ -46,7 +46,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         cadastrarProdutoMenu = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
+        consultarProdutoMenu = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
@@ -93,8 +93,13 @@ public class TelaPrincipal extends javax.swing.JFrame {
         });
         jMenu2.add(cadastrarProdutoMenu);
 
-        jMenuItem4.setText("Consultar");
-        jMenu2.add(jMenuItem4);
+        consultarProdutoMenu.setText("Consultar");
+        consultarProdutoMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                consultarProdutoMenuActionPerformed(evt);
+            }
+        });
+        jMenu2.add(consultarProdutoMenu);
 
         jMenuBar1.add(jMenu2);
 
@@ -145,11 +150,19 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void cadastrarProdutoMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastrarProdutoMenuActionPerformed
         // TODO add your handling code here:
-        CadastroProduto cadastroProduto = new CadastroProduto();
+        CadastroProduto cadastroProduto = new CadastroProduto(false);
         jDesktopPane1.add(cadastroProduto);
         openFrameInCenter(cadastroProduto);
         cadastroProduto.show();
     }//GEN-LAST:event_cadastrarProdutoMenuActionPerformed
+
+    private void consultarProdutoMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultarProdutoMenuActionPerformed
+        ConsultaProduto consultaProduto = new ConsultaProduto();
+        jDesktopPane1.add(consultaProduto);
+        openFrameInCenter(consultaProduto);
+        consultaProduto.show();
+
+    }//GEN-LAST:event_consultarProdutoMenuActionPerformed
 
     /**
      * @param args the command line arguments
@@ -190,6 +203,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu cadastrarClienteMenu;
     private javax.swing.JMenuItem cadastrarMenu;
     private javax.swing.JMenuItem cadastrarProdutoMenu;
+    private javax.swing.JMenuItem consultarProdutoMenu;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -197,7 +211,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;

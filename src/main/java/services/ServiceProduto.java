@@ -21,7 +21,7 @@ public class ServiceProduto {
     }
 
     public static String cadastrarProduto(Produto produto) {
-        String resposta;
+        String resposta = null;
         resposta = ValidadorProduto.validarProduto(produto);
         if (resposta == null) {
             try {
@@ -47,26 +47,26 @@ public class ServiceProduto {
     }
 
     public static List<Produto> buscarProduto(String nome) {
-        List<Produto>listaProdutos = null;
-        
-        try{
-            if(nome == null || "".equals(nome)){
-                MockProduto.listar();
-            }else{
-                MockProduto.procurar(nome);
+        List<Produto> listaProdutos = null;
+
+        try {
+            if (nome == null || "".equals(nome)) {
+                listaProdutos = MockProduto.listar();
+            } else {
+                listaProdutos = MockProduto.procurar(nome);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             //log de erro
         }
         return listaProdutos;
     }
-    
-    public static Produto obterProduto(Produto produto){
+
+    public static Produto obterProduto(Produto produto) {
         Produto resposta = null;
-        
-        try{
-            MockProduto.obter(produto.getId());
-        }catch(Exception e ){
+
+        try {
+            resposta = MockProduto.obter(produto.getId());
+        } catch (Exception e) {
             //log
         }
         return resposta;

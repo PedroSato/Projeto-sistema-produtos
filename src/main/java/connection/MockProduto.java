@@ -15,7 +15,7 @@ public class MockProduto {
 
     public static void atualizar(Produto produto)
             throws SQLException, Exception {
-        String SQL = "UPDATE produto SET nome=?, estoque=?, fabricante=?, preco=? WHERE (id=?)";
+        String SQL = "UPDATE produto SET nome=?, estoque=?, preco=?, fabricante=? WHERE (id=?)";
 
         Connection conn = null;
 
@@ -28,8 +28,9 @@ public class MockProduto {
 
             prepStmt.setString(1, produto.getNome());
             prepStmt.setInt(2, produto.getEstoque());
-            prepStmt.setString(3, produto.getFabricante());
             prepStmt.setFloat(4, produto.getPreco());
+            prepStmt.setString(3, produto.getFabricante());            
+            prepStmt.setInt(5, produto.getId());
 
         } catch (Exception e) {
 
@@ -55,11 +56,11 @@ public class MockProduto {
             if (result.next()) {
                 Produto produto = new Produto();
                 produto.setId(result.getInt("id"));
-                produto.setEstoque(result.getInt("estoque"));
-                produto.setFabricante(result.getString("fabricante"));
                 produto.setNome(result.getString("nome"));
+                produto.setEstoque(result.getInt("estoque"));
                 produto.setPreco(result.getFloat("preco"));
-
+                produto.setFabricante(result.getString("fabricante"));         
+                produto.setAtivo(result.getBoolean("ativo"));
                 return produto;
             }
         } finally {
@@ -78,7 +79,7 @@ public class MockProduto {
 
     public static void inserir(Produto produto)
             throws SQLException, Exception {
-        String SQL = "INSERT INTO produto (estoque, nome, fabricante, preco, ativo) VALUES (?,?,?,?,?)";
+        String SQL = "INSERT INTO produto (nome, estoque, preco, fabricante, ativo) VALUES (?,?,?,?,?)";
 
         Connection conn = null;
         PreparedStatement prepStmt = null;
@@ -86,10 +87,10 @@ public class MockProduto {
         try {
             conn = ConnectionUtils.getConnection();
             prepStmt = conn.prepareStatement(SQL);
-            prepStmt.setInt(1, produto.getEstoque());
-            prepStmt.setString(2, produto.getNome());
-            prepStmt.setString(3, produto.getFabricante());
-            prepStmt.setFloat(4, produto.getPreco());
+            prepStmt.setString(1, produto.getNome());
+            prepStmt.setInt(2, produto.getEstoque());
+            prepStmt.setFloat(3, produto.getPreco());
+            prepStmt.setString(4, produto.getFabricante());
             prepStmt.setBoolean(5, true);
 
             prepStmt.execute();
@@ -135,41 +136,39 @@ public class MockProduto {
 
     public static List<Produto> listar()
             throws SQLException, Exception {
-        String SQL = "SELECT * FROM produto WHERE (ativo=?)";
 
+        String sql = "SELECT * FROM produto WHERE (ativo=?)";
         List<Produto> listaProdutos = null;
 
-        PreparedStatement prepStmt = null;
         Connection conn = null;
 
+        PreparedStatement prepStmt = null;
         ResultSet result = null;
-
         try {
+
             conn = ConnectionUtils.getConnection();
+
+            prepStmt = conn.prepareStatement(sql);
             prepStmt.setBoolean(1, true);
 
             result = prepStmt.executeQuery();
 
             while (result.next()) {
-
                 if (listaProdutos == null) {
                     listaProdutos = new ArrayList<Produto>();
                 }
 
                 Produto produto = new Produto();
                 produto.setId(result.getInt("id"));
+                produto.setNome(result.getString("nome"));
                 produto.setEstoque(result.getInt("estoque"));
                 produto.setFabricante(result.getString("fabricante"));
-                produto.setNome(result.getString("nome"));
-                produto.setPreco(result.getFloat("preco"));
                 listaProdutos.add(produto);
             }
-
         } finally {
             if (result != null && !result.isClosed()) {
                 result.close();
             }
-
             if (prepStmt != null && !prepStmt.isClosed()) {
                 prepStmt.close();
             }
@@ -182,7 +181,8 @@ public class MockProduto {
 
     public static List<Produto> procurar(String valor)
             throws SQLException, Exception {
-        String SQL = "SELECT * FROM produto WHERE ((UPPER(nome) LIKE UPPER(?) AND ativo=?))";
+        String SQL = "SELECT * FROM produto WHERE ((UPPER(nome) LIKE UPPER(?) "
+                + "OR UPPER(produto.fabricante) LIKE UPPER(?)) AND ativo=?)";
         List<Produto> listaProdutos = null;
 
         Connection connection = null;
@@ -195,8 +195,9 @@ public class MockProduto {
             connection = ConnectionUtils.getConnection();
 
             preparedStatement = connection.prepareStatement(SQL);
-            preparedStatement.setString(1, valor);
-            preparedStatement.setBoolean(2, true);
+            preparedStatement.setString(1, "%" + valor + "%");
+            preparedStatement.setString(2, "%" + valor + "%");
+            preparedStatement.setBoolean(3, true);
             result = preparedStatement.executeQuery();
 
             while (result.next()) {
@@ -227,4 +228,3 @@ public class MockProduto {
         return listaProdutos;
     }
 }
-

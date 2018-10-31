@@ -73,8 +73,8 @@ public class MockVenda {
             prepStmt.execute();
         }
 
-        for (ItemVenda iv : venda.getItens()) {
-            if (iv.getCodigo() == 0) {
+        for (ItemVenda iv : venda.getCarrinho()) {
+            if (iv.getId() == 0) {
                 SQL = "INSERT INTO item_venda (id, id_venda, quantidade, valorUnitario) VALUES (?, ?, ?, ?)";
                 ps = c.getConexao().prepareStatement(sql);
                 ps.setInt(1, iv.getProduto().getCodigo());

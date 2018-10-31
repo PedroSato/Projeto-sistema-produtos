@@ -4,6 +4,8 @@ import connection.MockCliente;
 import model.bean.Cliente;
 import validadores.ValidadorCliente;
 import java.util.List;
+import model.bean.Venda;
+import validadores.ValidadorVenda;
 
 public class ServiceVenda {
 
@@ -28,11 +30,11 @@ public class ServiceVenda {
     public static String excluirVenda(Venda venda) {
         String resposta;
 
-        resposta = ValidadorCliente.validarVenda(venda);
+        resposta = ValidadorVenda.validarVenda(venda);
 
         if (resposta == null) {
             try {
-                MockCliente.excluir(cliente.getId());
+                MockVenda.excluir(venda.getId());
             } catch (Exception e) {
                 return "erro na fonte de dados";
             }

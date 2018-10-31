@@ -18,8 +18,11 @@ public class CadastroProduto extends javax.swing.JInternalFrame {
     /**
      * Creates new form CadastroProduto
      */
-    public CadastroProduto() {
+    boolean modoEdicao = false;
+
+    public CadastroProduto(boolean modoEdicao) {
         initComponents();
+        this.modoEdicao = modoEdicao;
     }
 
     /**
@@ -146,29 +149,51 @@ public class CadastroProduto extends javax.swing.JInternalFrame {
     private void salvarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salvarBtnActionPerformed
         // TODO add your handling code here:
         String resposta = null;
+        if (!modoEdicao) {
+            Produto produto = new Produto();
+            produto.setNome(nomeText.getText());
+            produto.setFabricante(fabricanteText.getText());
+            produto.setEstoque((int) estoqueSpin.getValue());
+            produto.setPreco(Float.valueOf(precoText.getText()));
 
-        Produto produto = new Produto();
-        produto.setNome(nomeText.getText());
-        produto.setFabricante(fabricanteText.getText());
-        produto.setEstoque((int) estoqueSpin.getValue());
-        produto.setPreco(Float.valueOf(precoText.getText()));
+            resposta = ServiceProduto.cadastrarProduto(produto);
 
-        resposta = ServiceProduto.cadastrarProduto(produto);
-
-        if (resposta == null) {
-            JOptionPane.showMessageDialog(rootPane,
-                    "Produto inserido com sucesso",
-                    "Cadastro efetuado",
-                    JOptionPane.INFORMATION_MESSAGE);
+            if (resposta == null) {
+                JOptionPane.showMessageDialog(rootPane,
+                        "Produto inserido com sucesso",
+                        "Cadastro efetuado",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(rootPane, resposta,
+                        "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+            precoText.setText("");
+            estoqueSpin.setValue(0);
+            fabricanteText.setText("");
+            nomeText.setText("");
         } else {
-            JOptionPane.showMessageDialog(rootPane, resposta,
-                    "Erro", JOptionPane.ERROR_MESSAGE);
-        }
-        precoText.setText("");
-        estoqueSpin.setValue(0);
-        fabricanteText.setText("");
-        nomeText.setText("");
+            Produto produto = new Produto();
+            produto.setNome(nomeText.getText());
+            produto.setFabricante(fabricanteText.getText());
+            produto.setEstoque((int) estoqueSpin.getValue());
+            produto.setPreco(Float.valueOf(precoText.getText()));
+            produto.setAtivo(true);
+            resposta = ServiceProduto.atualizarProduto(produto);
 
+            if (resposta == null) {
+                JOptionPane.showMessageDialog(rootPane,
+                        "Produto atualizado com sucesso",
+                        "Cadastro atualizado",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(rootPane, resposta,
+                        "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+            precoText.setText("");
+            estoqueSpin.setValue(0);
+            fabricanteText.setText("");
+            nomeText.setText("");
+        }
     }//GEN-LAST:event_salvarBtnActionPerformed
 
 
